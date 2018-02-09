@@ -30,6 +30,7 @@ Route::get('/addNewClient', function (){
 });
 */
 Route::resource('clients','ClientResourceController');
+Route::resource('clases','ClasResourceController');
 /*
 Route::get('/clients', function() {
     // If the Content-Type and Accept headers are set to 'application/json',

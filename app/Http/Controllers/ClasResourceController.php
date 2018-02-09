@@ -4,10 +4,9 @@ namespace App\Http\Controllers;
 
 use Illuminate\Http\Request;
 
-use App\Client;
+use App\Clas;
 
-
-class ClientResourceController extends Controller
+class ClasResourceController extends Controller
 {
     /**
      * Display a listing of the resource.
@@ -16,7 +15,8 @@ class ClientResourceController extends Controller
      */
     public function index()
     {
-        $cl = Client::all();
+        //var_dump("500000000000");
+        $cl = Clas::all();
         return response()->json($cl);
     }
 
@@ -27,7 +27,7 @@ class ClientResourceController extends Controller
      */
     public function create()
     {
-        var_dump(88);
+        //
     }
 
     /**
@@ -38,15 +38,7 @@ class ClientResourceController extends Controller
      */
     public function store(Request $request)
     {
-        //Client::create($request->all());
-        $req=Client::create($request->all());
-        return $req['id'];
-        //var_dump($req['id']);
-/*
-        return response()->json([
-            "message" => "Success"
-        ]);
-*/
+        //
     }
 
     /**
@@ -80,7 +72,7 @@ class ClientResourceController extends Controller
      */
     public function update(Request $request, $id)
     {
-        Client::find($id)->update($request->all());
+        //
     }
 
     /**
@@ -91,11 +83,6 @@ class ClientResourceController extends Controller
      */
     public function destroy($id)
     {
-        //var_dump(response());
-
-        Client::find($id)->delete();
-        //var_dump(response()->json(['done']));
-        //return response()->json(['done']);
-        //return 'Hello World';
+        //
     }
 }
