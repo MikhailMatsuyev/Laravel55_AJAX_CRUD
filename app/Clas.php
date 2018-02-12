@@ -10,4 +10,9 @@ class Clas extends Model
     protected $fillable = [
         'name'
     ];
+
+    public function recClas()
+    {
+        return $this->hasMany('App\Song');
+    }
 }

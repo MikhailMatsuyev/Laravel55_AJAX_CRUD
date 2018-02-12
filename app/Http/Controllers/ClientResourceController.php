@@ -27,7 +27,7 @@ class ClientResourceController extends Controller
      */
     public function create()
     {
-        var_dump(88);
+
     }
 
     /**
@@ -38,15 +38,8 @@ class ClientResourceController extends Controller
      */
     public function store(Request $request)
     {
-        //Client::create($request->all());
         $req=Client::create($request->all());
         return $req['id'];
-        //var_dump($req['id']);
-/*
-        return response()->json([
-            "message" => "Success"
-        ]);
-*/
     }
 
     /**
@@ -91,11 +84,6 @@ class ClientResourceController extends Controller
      */
     public function destroy($id)
     {
-        //var_dump(response());
-
         Client::find($id)->delete();
-        //var_dump(response()->json(['done']));
-        //return response()->json(['done']);
-        //return 'Hello World';
     }
 }

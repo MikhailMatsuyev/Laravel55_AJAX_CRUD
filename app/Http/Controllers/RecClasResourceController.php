@@ -4,9 +4,13 @@ namespace App\Http\Controllers;
 
 use Illuminate\Http\Request;
 
+use App\Reclas;
+
 use App\Clas;
 
-class ClasResourceController extends Controller
+use Illuminate\Support\Facades\DB;
+
+class RecClasResourceController extends Controller
 {
     /**
      * Display a listing of the resource.
@@ -15,9 +19,14 @@ class ClasResourceController extends Controller
      */
     public function index()
     {
+        $reC = Reclas::all();
+        //$clas = Clas::all();
+        foreach ($reC as $r){
+            $r->clas_id=Clas::find($r->clas_id)->name;
+        }
 
-        $cl = Clas::all();
-        return response()->json($cl);
+        return response()->json($reC);
+
     }
 
     /**
@@ -38,8 +47,18 @@ class ClasResourceController extends Controller
      */
     public function store(Request $request)
     {
-        //
+        foreach ($request->input('clas_date') as $val) {
+            DB::insert('insert into reclases (clas_date, clas_id, clas_start_time, clas_duration, clas_start_date, clas_end_date)
+                              values (?, (SELECT id FROM clases WHERE name = ? ), ?, ?, ?, ?)',
+                    [$val['date'],
+                    $request->input('clas_name_input'),
+                    $request->input('clas_start_time'),
+                    $request->input('clas_duration'),
+                    $request->input('clas_start_date'),
+                    $request->input('clas_end_date')]);
+        }
     }
+
 
     /**
      * Display the specified resource.
@@ -72,8 +91,20 @@ class ClasResourceController extends Controller
      */
     public function update(Request $request, $id)
     {
-        //
+
+        $id_clas = DB::table('clases')->where('name', $request->clas_name)->value('id');
+
+        DB::update('update reclases set clas_date = ?, clas_start_time=?, clas_duration=?,clas_id=? where id = ?',
+            [$request->input('clas_date'),
+            $request->input('clas_start_time'),
+            $request->input('clas_duration'),
+            $id_clas,
+            $id
+           ])
+
+        ;
     }
+
 
     /**
      * Remove the specified resource from storage.
@@ -83,6 +114,6 @@ class ClasResourceController extends Controller
      */
     public function destroy($id)
     {
-        //
+        Reclas::find($id)->delete();
     }
 }
