@@ -189,44 +189,39 @@
 
 /* Insert assigned clients to db  BEGIN****/
                     $(document).on('click', '.assignClient', function () {
-                        var name = $(this).parent().children(".selAssignedClient").val();
-                        console.log("name",name);
+                        var id = $(this).parent().parent().data('id');
+                        var clients_id = $(this).parent().parent().find("select[name='selectAssignedClient']").val();
+                        var d=$(this).parent().parent().find(".itemClassAssignedClients");
+
                         $.ajax({
-                            url: '{{ url('reclases')  }}',
-                            type: 'POST',
+                            url: '{{ url('reclases')  }}' +'/'+ id,
+                            type: 'PUT',
 
                             data: {_token: $("input[name=_token]").val(),
-                                clas_date       :data_for_insert_to_db.clas_date
+                                clients_id       :clients_id
                             },
 
                             success: function (response) {
-                                console.log("добавлено",response);
-                                showTableClass();
 
+                                $.each( response, function( key, value ){
+                                    console.log("value",value);
+                                    console.log("11",response);
+                                    d.append( "<p>"+value+" "+ key+"</p>" );
+                                })
                             },
                             error: function(xhr){
                                 var errors = xhr.responseJSON;
                                 var error = errors;
                                 if (error) {
-                                    alert(error);
+                                    console.log(error);
                                 }
                             },
                         });
-                        //var field = $('#formAddReccuringClases').find("select[name='repeat-on-field']").val();
-                        // var input = $("#tableClases").find("select[name='selectAssignedClient']").val();
-
-                        //$(this).parent().children(".selAssignedClient").attr('disabled', false);
-
-                            //alert(100);
-
-
-
-
-                        //selectAssignedClient
-                        alert (100);
                     })
 
 /* Insert assigned clients to db END****/
+
+
                     function getDatesClases(obj_date_start, obj_date_end, repeat_on_field) {
                         var a = obj_date_start.clone();
                         var b = obj_date_end.clone();
@@ -268,15 +263,13 @@
 
                     $("#formAddClients").hide();
 
-/**Add new client BEGIN*****************************************************************/
+/*****************************************************************/
                     function getDataFromForm () {
-                        //var format = 'YYYY-YY-DD';
                         var clas_name_input = $("#formAddReccuringClases").find("select[name='clas-name']").val();
                         var clas_start_time = $("#formAddReccuringClases").find("input[name='clas-start-time']").val();
                         var clas_duration =   $("#formAddReccuringClases").find("input[name='clas-duration']").val();
                         var repeat_on_field = $('#formAddReccuringClases').find("select[name='repeat-on-field']").val();
                         var clas_end_date   = $("#formAddReccuringClases").find("input[name='clas-end-date']").val();
-                        //console.log("clas_end_date", moment(moment(clas_end_date, "YYYY-MM-DD").add(5,'days')));
                         var clas_start_date = $("#formAddReccuringClases").find("input[name='clas-start-date']").val();
 
                         var obj_date_start = setStartEndDateToMomentObject(clas_start_date);
@@ -300,8 +293,6 @@
 
                     /*saveAfterEditTableClas begin******************************************************************/
                     $(document).on('click', '.saveAfterEditTableClas',function () {
-                        //var id = $(this).parent().find("input[name='first_name']").data('id') ;
-                        //var btn_edit = $(this).parent().children(".saveAfterEditClient");
                         var clas_name = $(this).parent().parent().children().children(".itemClassName").val();
                         var clas_date = $(this).parent().parent().children().children(".itemClassDate").val();
                         var clas_duration = $(this).parent().parent().children().children(".itemClassDuration").val();
@@ -356,8 +347,6 @@
                     /* Delete class begin***************************************************************************/
                     $(document).on('click', '.deleteTableClas',function () {
                         var id = $(this).parent().parent().data('id');
-                        //var id = $(this).parent().parent().find("tr[name='inputTableClas']").data('id') ;
-                        //console.log("ableClas", $(this).parent().parent().data('id'));
 
                         $.ajaxSetup({
                             headers: {
@@ -372,7 +361,6 @@
                             data: {_token: $("input[name=_token]").val()},
                             success: function (response) {
                                 showTableClass();
-                                //div_remove_from_dom.remove();
                             },
                             error: function(xhr){
                                 var errors = xhr.responseJSON;
@@ -382,21 +370,13 @@
                                 }
                             },
                         });
-
-                        /*
-                        console.log("99999",$(this).parent().parent().children());
-                        $(this).parent().parent().children().children(".itemClassDate").attr('disabled', false);
-                        $(this).parent().parent().children().children(".itemClassStartTime").attr('disabled', false);
-                        $(this).parent().parent().children().children(".itemClassDuration").attr('disabled', false);
-                        $(this).parent().parent().children().children(".itemClassName").attr('disabled', false);
-                        */
                     })
                     /* Delete class end*****************************************************************************/
 
                     /* Show table class begin******************/
                     function showTableClass() {
                         var data_for_insert_to_db=getDataFromForm();
-                        // console.log("data_for_insert_to_db",data_for_insert_to_db.clas_end_date);
+
                         $.ajaxSetup({
                             headers: {
                                 'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')
@@ -406,33 +386,16 @@
                         $.ajax({
                             url: '{{ url('reclases')  }}',
                             type: 'GET',
-/*
-                            data: {_token: $("input[name=_token]").val(),
-                                clas_name_input :data_for_insert_to_db.clas_name_input,
-                                clas_start_time :data_for_insert_to_db.clas_start_time,
-                                clas_duration   :data_for_insert_to_db.clas_duration,
-                                repeat_on_field :data_for_insert_to_db.repeat_on_field,
-                                clas_end_date   :data_for_insert_to_db.clas_end_date,
-                                clas_start_date :data_for_insert_to_db.clas_start_date,
-                                clas_date       :data_for_insert_to_db.clas_date
-                            },
-*/
 
                             success: function (response) {
-                                //console.log("добавлено", response);
                                 $("#tableClases").find("tr[name='inputTableClas']").remove();
                                 $.each( response, function( key, value ) {
-
-                                    //console.log("response", response);
                                     $('#tableClases').append("<tr name='inputTableClas' data-id='"+value.id+"'>" +
                                         "<td><input style='' name='' class='itemClassDate' disabled value='"+ value.clas_date +"'/></td>" +
                                         "<td><input style='' name='' class='itemClassStartTime' disabled value='"+ value.clas_start_time +"'/></td>" +
                                         "<td><input style='' name='' class='itemClassDuration ' disabled value='"+ value.clas_duration +"'/></td>" +
                                         "<td><input style='' name='' class='itemClassName' disabled value='"+ value.clas_id +"'/></td>" +
-                                        "<td><input style='' name='' class=' ' disabled /></td>" +
-
-
-
+                                         "<td><div style='' name='assigned_clients' class='itemClassAssignedClients'>" + value.uuu + "</div></td>"+
                                         "<td>" +
                                             "<button type='button' class='btn btn-success btn-sm ml-1 assignClient' disabled>Assign</button>" +
                                             "<select class='custom-select selAssignedClient' multiple size='2' name='selectAssignedClient' disabled></select>"+
@@ -442,28 +405,14 @@
                                             "<button type='button' class='btn btn-primary btn-sm ml-1 saveAfterEditTableClas'>Save</button>" +
                                         "</td>"+
                                         "<td><button type='button' class='btn btn-danger btn-sm ml-1 deleteTableClas'>Delete</button></td></tr>"
-
                                     );
-
-
-                                    /*
-                                    $('#getAllClientsData').append("<div class='div_for_item_clients'>" +
-                                        "<input style='display: block' name='first_name' class='itemClient st_name' data-id='"+value.id+"' disabled value='"+value.first_name+"'/>" +
-                                        "<input style='display: block' name='last_name' class='itemClient lst_name' data-id='"+value.id+"' disabled value='"+value.last_name+"' />"+
-                                        "<button type='button' class='btn btn-primary btn-sm ml-1 editNewClient' >Edit</button>"+
-                                        "<button type='button' class='btn btn-danger btn-sm ml-1 deleteNewClient'>Delete</button>"+
-                                        "<button type='button' class='btn btn-success btn-sm ml-1 saveAfterEditClient' disabled>Save</button></div>"
-                                    );*/
                                 })
-
-
-
                             },
                             error: function(xhr){
                                 var errors = xhr.responseJSON;
                                 var error = errors;
                                 if (error) {
-                                    alert(error);
+                                    console.log(error);
                                 }
                             },
                         });
@@ -497,7 +446,6 @@
                                 clas_date       :data_for_insert_to_db.clas_date
                             },
                             success: function (response) {
-                                console.log("добавлено",response);
                                 showTableClass();
 
                             },
@@ -516,7 +464,6 @@
 
 /**Show all clases BEGIN *************************************************************/
                     $('#getAllClases').click(function () {
-                        //alert(100);
                         $.ajax({
                             url: '{{ url('clases')  }}',
                             type: 'GET',
@@ -546,7 +493,6 @@
 
 /**Show all classess BEGIN *************************************************************/
                     $('#getAllClients').click(function () {
-                        //alert(100);
                         $.ajax({
                             url: '{{ url('clients')  }}',
                             type: 'GET',
@@ -591,7 +537,6 @@
                         });
                         var first_name = $("#formAddClients").find("input[name='first_name']").val();
                         var last_name = $("#formAddClients").find("input[name='last_name']").val();
-                        // console.log("first_name0---",first_name);
 
                         $.ajax({
                             url: '{{ url('clients')  }}',
@@ -599,8 +544,6 @@
 
                             data: {_token: $("input[name=_token]").val(), first_name:first_name, last_name:last_name},
                             success: function (response) {
-                                alert("добавлено");
-                                //response[0].id;
                                 var id =response;
                                 $('#getAllClientsData').append("<div class='div_for_item_clients'>" +
                                     "<input style='display: block' name='first_name' class='itemClient st_name' data-id='"+id+"' disabled value='"+first_name+"'/>" +
@@ -618,12 +561,6 @@
                                 }
                             },
                         });
-                        /*
-                        $.ajaxSetup({
-                            headers: {
-                                'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')
-                            }
-                        });*/
                     });
 /**Add new client END*****************************************************************/
 
@@ -632,8 +569,6 @@
                     $(document).on('click', '.deleteNewClient',function () {
                         var id = $(this).parent().find("input[name='first_name']").data('id') ;
                         var div_remove_from_dom = $(this).parent();
-                        //console.log("div_remove_from_dom-", div_remove_from_dom);
-                        //console.log("id-",id);
 
                         $.ajaxSetup({
                             headers: {

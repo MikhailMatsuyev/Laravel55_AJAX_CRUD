@@ -18,6 +18,7 @@ class ClientResourceController extends Controller
     {
         $cl = Client::all();
         return response()->json($cl);
+
     }
 
     /**

@@ -15,14 +15,6 @@ Route::get('/', function () {
     return view('welcome');
 });
 
-/*
-Route::get('/getAllClients', function (){
-    if(Request::ajax()){
-        return 'okokokok';
-    }
-});*/
-
-
 Route::resource('clients',  'ClientResourceController');
 Route::resource('clases',   'ClasResourceController');
 Route::resource('reclases', 'RecClasResourceController');
